@@ -2,6 +2,24 @@
 
 Label Studio project for native keep/drop review of doubtful words, keyboard only.
 
+## Requirements
+
+- Windows with PowerShell (`start.ps1`), Python 3.10+, [`uv`](https://docs.astral.sh/uv/), about 700 MB disk.
+- Sibling folders `../ce-corpus-toolkit` (on a branch that has `russian_filter.py`, with `exports/main_ce.combined` built) and `../aosp-dictionaries`. `make_tasks.py` reads both.
+- Reviewers need only a browser, but the server listens on localhost, so they must sit at this machine or reach it through a tunnel.
+
+## First-time setup
+
+```
+python -m venv .venv
+uv pip install --python .venv/Scripts/python.exe label-studio
+./start.ps1
+```
+
+Plain `pip install label-studio` stalled on Python 3.13; `uv` took under a minute. If PowerShell refuses to run the script: `powershell -ExecutionPolicy Bypass -File start.ps1`.
+
+The first start creates an empty project `ce-word-review` (id 1). Load words into it with the commands under "Add words", e.g. from `blind_100.csv`.
+
 ## Run
 
 ```
@@ -28,12 +46,3 @@ Answers already in the sheet arrive as pre-annotations, so they show pre-selecte
 ## Get results
 
 Project → Export → CSV. Columns: `context`, `word`, `speech`, `kind`, `comment`.
-
-## Reinstall
-
-```
-python -m venv .venv
-uv pip install --python .venv/Scripts/python.exe label-studio
-```
-
-Plain `pip install label-studio` stalled on Python 3.13; `uv` took under a minute.
