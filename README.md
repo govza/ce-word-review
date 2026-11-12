@@ -1,48 +1,104 @@
 # word-review
 
-Label Studio project for native keep/drop review of doubtful words, keyboard only.
+Review doubtful Chechen dictionary words one by one, using only the keyboard. Runs [Label Studio](https://labelstud.io/) locally on Windows.
 
-## Requirements
+For each word you see its sentence, whether it is in the Russian and Chechen dictionaries, and answer two questions:
 
-- Windows with PowerShell (`start.ps1`), Python 3.10+, [`uv`](https://docs.astral.sh/uv/), about 700 MB disk.
-- Sibling folders `../ce-corpus-toolkit` (on a branch that has `russian_filter.py`, with `exports/main_ce.combined` built) and `../aosp-dictionaries`. `make_tasks.py` reads both.
-- Reviewers need only a browser, but the server listens on localhost, so they must sit at this machine or reach it through a tunnel.
+1. Whose speech is it? (Chechen / Russian)
+2. What kind of word is it? (ordinary, loanword, Russian, name, abbreviation, typo)
 
-## First-time setup
+## What you need
 
-```
+- Windows with PowerShell
+- Python 3.10 or newer
+- [`uv`](https://docs.astral.sh/uv/getting-started/installation/)
+- About 700 MB of free disk
+- This folder next to `ce-corpus-toolkit` and `aosp-dictionaries` (see the workspace `README.md`)
+
+## Install (once)
+
+Run in PowerShell, inside this folder:
+
+```powershell
 python -m venv .venv
 uv pip install --python .venv/Scripts/python.exe label-studio
+```
+
+Use `uv` here: plain `pip install label-studio` stalled on Python 3.13.
+
+## Start
+
+```powershell
 ./start.ps1
 ```
 
-Plain `pip install label-studio` stalled on Python 3.13; `uv` took under a minute. If PowerShell refuses to run the script: `powershell -ExecutionPolicy Bypass -File start.ps1`.
+Wait about a minute, then open http://localhost:8080 and log in:
 
-The first start creates an empty project `ce-word-review` (id 1). Load words into it with the commands under "Add words", e.g. from `blind_100.csv`.
+- Email: `reviewer@example.com`
+- Password: `chechen-review`
 
-## Run
+Keep the PowerShell window open while you work. Close it to stop the server.
 
-```
-./start.ps1
-```
+If PowerShell refuses to run the script, use `powershell -ExecutionPolicy Bypass -File start.ps1`.
 
-Opens http://localhost:8080 (login `reviewer@example.com` / `chechen-review`, local only). Data lives in `data/`.
+## Load words (once per batch)
 
-Hotkeys: `1` чеченская, `2` русская; `q` обычное слово, `w` заимствование, `e` русское, `r` имя / название, `t` сокращение, `y` опечатка; `Ctrl+Enter` submit and next.
+The first start creates an empty project, `ce-word-review`. With the server running, open a second PowerShell window in this folder:
 
-## Add words
-
-Export the sheet as CSV or TSV (headers `Контекст…`, `Слово`, `1. …`, `2. …`, `Комментарий…`), then:
-
-```
-python make_tasks.py sheet.csv tasks.json
-curl -H "Authorization: Token local-review-token" -H "Content-Type: application/json" --data-binary @tasks.json http://localhost:8080/api/projects/1/import
+```powershell
+python make_tasks.py blind_100.csv tasks.json
+curl.exe -H "Authorization: Token local-review-token" -H "Content-Type: application/json" --data-binary "@tasks.json" http://localhost:8080/api/projects/1/import
 ```
 
-Each task shows whether the word is in `main_ru.combined` and `main_ce.combined` (with its frequency), looked up when `make_tasks.py` runs.
+Running the second command twice loads the batch twice.
 
-Answers already in the sheet arrive as pre-annotations, so they show pre-selected and still need `Ctrl+Enter`.
+For a new batch, export the sheet as CSV or TSV and use it in place of `blind_100.csv`. The sheet needs these column headers:
 
-## Get results
+| Header starts with | Content |
+|---|---|
+| `Контекст` | sentence containing the word |
+| `Слово` | the word to review |
+| `1.` | speech answer, may be empty |
+| `2.` | kind answer, may be empty |
+| `Комментарий` | comment, may be empty |
 
-Project → Export → CSV. Columns: `context`, `word`, `speech`, `kind`, `comment`.
+Answers already in the sheet show up pre-selected. They still need `Ctrl+Enter` to count as reviewed.
+
+## Review
+
+Open the project and click **Label All Tasks**. It serves only the words not yet answered. Clicking a row in the table instead walks through every word, answered ones included.
+
+| Key | Answer |
+|---|---|
+| `1` | чеченская |
+| `2` | русская |
+| `q` | обычное слово |
+| `w` | заимствование |
+| `e` | русское |
+| `r` | имя / название |
+| `t` | сокращение |
+| `y` | опечатка |
+| `Ctrl+Enter` | submit and go to the next word |
+| `Ctrl+Space` | skip |
+
+The line under the word shows the dictionary lookup, for example `RU словарь: f=57 · CE словарь: f=114`. `f` is the frequency, `нет` means the word is absent. The CE dictionary is the list under review, so a word being in it does not make it correct.
+
+## Get the results
+
+In the project: **Export** → **CSV**. Columns: `context`, `word`, `info`, `speech`, `kind`, `comment`.
+
+Your answers are stored only in `data/`, which is not in git. Export regularly as a backup.
+
+## Other reviewers
+
+The server answers only on this machine. To let someone else review, expose port 8080 through a tunnel or host it on a server, and first change the email, password and token in `start.ps1`.
+
+## Files
+
+| File | Purpose |
+|---|---|
+| `start.ps1` | starts the server and creates the project on first run |
+| `label_config.xml` | the review screen: questions, answers, hotkeys |
+| `make_tasks.py` | turns a sheet export into Label Studio tasks |
+| `blind_100.csv` | first batch of 100 words |
+| `data/` | Label Studio database with your answers (not in git) |
