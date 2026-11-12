@@ -24,6 +24,10 @@ sheet (CSV)  <-  exports/batch_reviewed.csv  <-  export_results.py  <---------+
 
 `imports/`, `exports/` and `data/` are not in git: they hold corpus text and your answers.
 
+## Worked example
+
+The [`example`](https://github.com/govza/ce-word-review/tree/example) branch contains a real batch of 100 words: the input `imports/blind_100.csv` and the reviewed result `exports/blind_100_reviewed.csv`. Check it out to follow every step with real data.
+
 ## What you need
 
 - Windows with PowerShell
