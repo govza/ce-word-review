@@ -7,17 +7,17 @@
   <Text name="info" value="$info"/>
   <Header size="5" value="1. Чья это речь?"/>
   <Choices name="speech" toName="ctx" choice="single" required="true" showInline="true">
-    <Choice value="чеченская" hotkey="1"/>
-    <Choice value="русская" hotkey="2"/>
+    <Choice value="чеченская" hotkey="f"/>
+    <Choice value="русская" hotkey="j"/>
   </Choices>
   <Header size="5" value="2. Что это за слово?"/>
   <Choices name="kind" toName="ctx" choice="single" required="true" showInline="true">
-    <Choice value="обычное слово" hotkey="q"/>
-    <Choice value="заимствование" hotkey="w"/>
-    <Choice value="русское" hotkey="e"/>
-    <Choice value="имя / название" hotkey="r"/>
-    <Choice value="сокращение" hotkey="t"/>
-    <Choice value="опечатка" hotkey="y"/>
+    <Choice value="обычное слово" hotkey="1"/>
+    <Choice value="заимствование" hotkey="2"/>
+    <Choice value="русское" hotkey="3"/>
+    <Choice value="имя / название" hotkey="4"/>
+    <Choice value="сокращение" hotkey="5"/>
+    <Choice value="опечатка" hotkey="6"/>
   </Choices>
   <TextArea name="comment" toName="ctx" placeholder="Комментарий (по желанию)" rows="1" maxSubmissions="1" editable="true"/>
 </View>
