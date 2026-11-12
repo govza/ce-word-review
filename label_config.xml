@@ -16,8 +16,8 @@
     <Choice value="заимствование" hotkey="2"/>
     <Choice value="русское" hotkey="3"/>
     <Choice value="имя / название" hotkey="4"/>
-    <Choice value="сокращение" hotkey="5"/>
-    <Choice value="опечатка" hotkey="6"/>
+    <Choice value="опечатка" hotkey="5"/>
+    <Choice value="сокращение" hotkey="6"/>
   </Choices>
   <TextArea name="comment" toName="ctx" placeholder="Комментарий (по желанию)" rows="1" maxSubmissions="1" editable="true"/>
 </View>

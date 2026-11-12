@@ -76,8 +76,8 @@ Open the project and click **Label All Tasks**. It serves only the words not yet
 | `2` | заимствование |
 | `3` | русское |
 | `4` | имя / название |
-| `5` | сокращение |
-| `6` | опечатка |
+| `5` | опечатка |
+| `6` | сокращение |
 | `Ctrl+Enter` | submit and go to the next word |
 | `Ctrl+Space` | skip |
 
