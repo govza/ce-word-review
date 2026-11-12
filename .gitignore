@@ -1,4 +1,5 @@
 .venv/
 data/
+exports/
 tasks.json
 __pycache__/

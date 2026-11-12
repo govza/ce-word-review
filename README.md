@@ -85,9 +85,15 @@ The line under the word shows the dictionary lookup, for example `RU слова�
 
 ## Get the results
 
-In the project: **Export** → **CSV**. Columns: `context`, `word`, `info`, `speech`, `kind`, `comment`.
+With the server running:
 
-Your answers are stored only in `data/`, which is not in git. Export regularly as a backup.
+```powershell
+python export_results.py exports/blind_100_reviewed.csv
+```
+
+The file has the same columns as the input sheet, with the answers filled in, so it can be pasted back into the sheet. Rows are numbered in import order.
+
+Your answers are stored only in `data/` and `exports/`, and neither is in git. Export regularly as a backup.
 
 ## Other reviewers
 
@@ -100,5 +106,7 @@ The server answers only on this machine. To let someone else review, expose port
 | `start.ps1` | starts the server and creates the project on first run |
 | `label_config.xml` | the review screen: questions, answers, hotkeys |
 | `make_tasks.py` | turns a sheet export into Label Studio tasks |
+| `export_results.py` | writes the answers to `exports/` in the input sheet's format |
 | `blind_100.csv` | first batch of 100 words |
+| `exports/` | exported results (not in git) |
 | `data/` | Label Studio database with your answers (not in git) |
